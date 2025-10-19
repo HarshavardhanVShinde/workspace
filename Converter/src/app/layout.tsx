@@ -7,6 +7,8 @@ import LayoutShellClient from "@/components/layout-shell-client";
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { siteUrl, siteName } from "@/lib/seo";
+import Script from "next/script";
+import SiteNavigationStructuredData from "@/components/seo/site-navigation";
 
 export const revalidate = 3600;
 export const dynamic = 'force-static';
@@ -28,13 +30,13 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "ToolSynth - Calculator Hub | Free Online Calculators",
+  title: "TechSynth - Calculator Hub | Free Online Calculators",
   description: "Comprehensive collection of free online calculators including SIP, BMI, EMI, Currency Converter, Age Calculator, and Unit Converter. Fast, accurate, and mobile-friendly.",
   keywords: "calculator, SIP calculator, BMI calculator, EMI calculator, currency converter, age calculator, unit converter, financial calculator",
-  authors: [{ name: "ToolSynth" }],
+  authors: [{ name: "TechSynth" }],
   metadataBase: new URL(siteUrl),
   openGraph: {
-    title: "ToolSynth - Calculator Hub",
+    title: "TechSynth - Calculator Hub",
     description: "Free online calculators for finance, health, and daily conversions.",
     url: siteUrl,
     siteName,
@@ -43,11 +45,14 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: "ToolSynth - Calculator Hub",
+    title: "TechSynth - Calculator Hub",
     description: "Free online calculators for finance, health, and conversions.",
   },
   robots: { index: true, follow: true },
   alternates: { canonical: siteUrl },
+  verification: {
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
 };
 
 export const viewport: Viewport = {
@@ -87,11 +92,28 @@ export default function RootLayout({
         {/* Global structured data */}
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(orgJsonLd) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }} />
+        <SiteNavigationStructuredData />
         <ThemeProvider>
           <NavUIProvider>
             <LayoutShellClient>{children}</LayoutShellClient>
           </NavUIProvider>
         </ThemeProvider>
+        {/* Optional Google Analytics (GA4) */}
+        {process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID && (
+          <>
+            <Script src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`} strategy="afterInteractive" />
+            <Script id="ga-init" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);} 
+                gtag('js', new Date());
+                gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}', {
+                  page_path: window.location.pathname,
+                });
+              `}
+            </Script>
+          </>
+        )}
         <Analytics />
         <SpeedInsights />
       </body>

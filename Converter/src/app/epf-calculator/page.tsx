@@ -50,7 +50,16 @@ export default function EPFCalculator() {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
       {/* Title is provided by shared PageHeaderFromPath */}
-      <PageHeader title="EPF Calculator" description="Estimate your EPF corpus at retirement with employee/employer contributions and annual interest." />
+      {/* <PageHeader title="EPF Calculator" description="Estimate your EPF corpus at retirement with employee/employer contributions and annual interest." /> */}
+      <div className="mb-12 text-center">
+        <h1 className="font-extrabold tracking-tight text-4xl sm:text-5xl bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 mb-4">
+          EPF Calculator
+        </h1>
+        <p className="max-w-2xl mx-auto text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+          Estimate your EPF corpus at retirement with employee/employer contributions and annual interest.
+        </p>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <GlassCard title="Inputs" subtitle="Configure EPF assumptions for employee and employer contributions.">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 export const siteUrl = 'https://techsynth.co'
-export const siteName = 'ToolSynth'
+export const siteName = 'TechSynth'
 
 export type WebPageJsonLdInput = {
   name: string

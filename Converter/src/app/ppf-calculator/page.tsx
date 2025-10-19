@@ -51,7 +51,16 @@ export default function PPFCalculator() {
   return (
     <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8">
       {/* Title via shared PageHeaderFromPath */}
-      <PageHeader title="PPF Calculator" description="Estimate your PPF corpus with annual contributions and tax-free interest." />
+      {/* <PageHeader title="PPF Calculator" description="Estimate your PPF corpus with annual contributions and tax-free interest." /> */}
+            <div className="mb-12 text-center">
+        <h1 className="font-extrabold tracking-tight text-4xl sm:text-5xl bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 mb-4">
+          PPF Calculator
+        </h1>
+        <p className="max-w-2xl mx-auto text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+          Estimate your PPF corpus with annual contributions and tax-free interest.
+        </p>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <GlassCard title="Inputs" subtitle="Yearly investment with interest compounded annually.">
           <div className="space-y-6">

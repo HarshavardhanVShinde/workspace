@@ -7,6 +7,7 @@ const nextConfig: NextConfig = {
   trailingSlash: false,
   eslint: { ignoreDuringBuilds: true },
   typescript: { ignoreBuildErrors: true },
+  distDir: '.next',
   images: {
     formats: ['image/avif', 'image/webp'],
     deviceSizes: [360, 640, 768, 1024, 1280, 1536, 1920],

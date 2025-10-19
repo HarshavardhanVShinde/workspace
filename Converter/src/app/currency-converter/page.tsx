@@ -4,6 +4,9 @@ import { useState, useEffect, useMemo } from 'react'
 import { GlassCard } from '@/components/ui/glass-card'
 import Select from 'react-select'
 import PageHeader from '@/components/ui/page-header'
+import Link from 'next/link'
+import { siteUrl, getWebAppJsonLd } from '@/lib/seo'
+
 
 // Types for ExchangeRate-API response
 type ExchangeResponse = {
@@ -17,6 +20,8 @@ type ExchangeResponse = {
 
 type Option = { value: string; label: string }
 
+
+
 export default function CurrencyConverter() {
   const [amount, setAmount] = useState<string>('100')
   const [fromCurrency, setFromCurrency] = useState<string>('USD')
@@ -29,6 +34,7 @@ export default function CurrencyConverter() {
   const [cachedAt, setCachedAt] = useState<string>('')
   const [loadingRates, setLoadingRates] = useState<boolean>(true)
   const [fetchError, setFetchError] = useState<string | null>(null)
+
 
   // Fetch exchange rates once (cached for 12 hours by the API route)
   useEffect(() => {
@@ -85,19 +91,23 @@ export default function CurrencyConverter() {
       control: (base: any, state: any) => ({
         ...base,
         backgroundColor: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.6)',
-        borderColor: 'rgba(255,255,255,0.3)',
+        borderColor: isDark ? 'rgba(255,255,255,0.35)' : '#D1D5DB',
+        borderWidth: 1,
+        borderStyle: 'solid',
         borderRadius: 12,
         minHeight: 48,
         boxShadow: state.isFocused ? '0 0 0 2px #F59E0B55' : 'none',
-        ':hover': { borderColor: 'rgba(255,255,255,0.5)' },
+        ':hover': { borderColor: isDark ? 'rgba(255,255,255,0.55)' : '#9CA3AF' },
       }),
       menu: (base: any) => ({
         ...base,
         backgroundColor: isDark ? 'rgba(24,24,27,0.95)' : 'rgba(255,255,255,0.95)',
         borderRadius: 12,
         overflow: 'hidden',
-        zIndex: 9999,
+        zIndex: 200000,
+        border: isDark ? '1px solid rgba(255,255,255,0.12)' : '1px solid rgba(0,0,0,0.08)',
       }),
+      menuPortal: (base: any) => ({ ...base, zIndex: 200000 }),
       option: (base: any, state: any) => ({
         ...base,
         backgroundColor: state.isFocused
@@ -157,6 +167,14 @@ export default function CurrencyConverter() {
 
   const quickAmounts = [1, 5, 10, 100]
 
+  // Structured data for this page (WebApplication)
+  const webAppJsonLd = useMemo(() => getWebAppJsonLd({
+    name: 'Currency Converter - TechSynth',
+    description: 'Convert between world currencies with live rates cached every 12 hours.',
+    url: `${siteUrl}/currency-converter`,
+    applicationCategory: 'Finance'
+  }), [])
+
   // Loading skeleton component
   const LoadingSkeleton = () => (
     <div className="animate-pulse space-y-6">
@@ -171,15 +189,27 @@ export default function CurrencyConverter() {
     </div>
   )
 
+
+
   return (
     <div className="min-h-screen pt-4 sm:pt-8 pb-8 sm:pb-24">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <PageHeader 
+        {/* <PageHeader 
           title="Currency Converter" 
           description="Convert between world currencies with live rates cached every 12 hours." 
-        />
+        />  */}
+      <div className="mb-12 text-center">
+        <h1 className="font-extrabold tracking-tight text-4xl sm:text-5xl bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 mb-4">
+          Currency Converter
+        </h1>
+        <p className="max-w-2xl mx-auto text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+          Convert between world currencies with live rates cached every 12 hours.
+        </p>
+      </div>
 
         <div className="mt-8 grid gap-6 lg:gap-10 lg:grid-cols-3">
+          {/* Inject page-level structured data */}
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(webAppJsonLd) }} />
           {/* Main Converter Section */}
           <div className="lg:col-span-2">
             <GlassCard className="p-4 sm:p-6 lg:p-8">
@@ -196,11 +226,11 @@ export default function CurrencyConverter() {
                       type="number"
                       value={amount}
                       onChange={(e) => setAmount(e.target.value)}
-                      className="w-full px-4 py-3 text-lg bg-white/60 dark:bg-white/10 border border-white/30 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all"
+                      className="w-full px-4 py-3 text-lg bg-white/60 dark:bg-white/10 border border-gray-300 dark:border-white/30 rounded-xl focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-all"
                       placeholder="100"
                       min="0"
                       step="0.01"
-                      disabled={!!fetchError}
+                      disabled={loadingRates}
                     />
                   </div>
 
@@ -215,7 +245,7 @@ export default function CurrencyConverter() {
                         value={currencyOptions.find((o) => o.value === fromCurrency) ?? null}
                         onChange={(opt) => setFromCurrency((opt as Option)?.value)}
                         options={currencyOptions}
-                        isDisabled={!!fetchError}
+                        isDisabled={loadingRates}
                         isSearchable
                         styles={selectStyles}
                         className="react-select-container"
@@ -230,9 +260,9 @@ export default function CurrencyConverter() {
                     <div className="flex justify-center sm:col-span-1">
                       <button
                         onClick={swapCurrencies}
-                        className="w-full sm:w-auto px-6 py-3 bg-white/60 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/20 rounded-xl transition-all border border-white/30 shadow-soft text-sm font-medium touch-manipulation"
+                        className="w-full sm:w-auto px-6 py-3 bg-white/60 dark:bg-white/10 hover:bg-white/80 dark:hover:bg-white/20 rounded-xl transition-all border border-gray-300 dark:border-white/30 shadow-soft text-sm font-medium touch-manipulation"
                         title="Swap currencies"
-                        disabled={!!fetchError}
+                        disabled={loadingRates}
                       >
                         ⇅ Swap
                       </button>
@@ -247,7 +277,7 @@ export default function CurrencyConverter() {
                         value={currencyOptions.find((o) => o.value === toCurrency) ?? null}
                         onChange={(opt) => setToCurrency((opt as Option)?.value)}
                         options={currencyOptions}
-                        isDisabled={!!fetchError}
+                        isDisabled={loadingRates}
                         isSearchable
                         styles={selectStyles}
                         className="react-select-container"
@@ -260,7 +290,7 @@ export default function CurrencyConverter() {
                   </div>
 
                   {/* Result - Enhanced Mobile Layout */}
-                  <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 dark:from-yellow-500/20 dark:to-orange-500/20 rounded-xl p-4 sm:p-6 border border-white/30">
+                  <div className="bg-gradient-to-r from-yellow-500/10 to-orange-500/10 dark:from-yellow-500/20 dark:to-orange-500/20 rounded-xl p-4 sm:p-6 border border-gray-300 dark:border-white/30">
                     <div className="text-center">
                       <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Converted Amount</p>
                       <p className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2 break-words">
@@ -284,8 +314,8 @@ export default function CurrencyConverter() {
                           <button
                             key={quickAmount}
                             onClick={() => setAmount(quickAmount.toString())}
-                            className="p-3 bg-white/40 dark:bg-white/10 hover:bg-white/60 dark:hover:bg-white/20 rounded-xl transition-all border border-white/30 text-center touch-manipulation active:scale-95"
-                            disabled={!!fetchError}
+                            className="p-3 bg-white/40 dark:bg-white/10 hover:bg-white/60 dark:hover:bg-white/20 rounded-xl transition-all border border-gray-300 dark:border-white/30 text-center touch-manipulation active:scale-95"
+                            disabled={loadingRates}
                           >
                             <div className="text-sm font-medium text-gray-900 dark:text-white">
                               {quickAmount} {fromCurrency}
@@ -330,6 +360,8 @@ export default function CurrencyConverter() {
                 </div>
               )}
             </GlassCard>
+
+
           </div>
 
           {/* Side Information Panel - Mobile Responsive */}
@@ -354,12 +386,7 @@ export default function CurrencyConverter() {
                       <span className="text-sm text-gray-600 dark:text-gray-400">Cache Duration</span>
                       <span className="text-sm font-medium text-gray-900 dark:text-white">12 hours</span>
                     </div>
-                    
-                    <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg">
-                      <p className="text-xs text-blue-600 dark:text-blue-400">
-                        💡 Rates are cached for optimal performance on Vercel. The API is only called once every 12 hours.
-                      </p>
-                    </div>
+  
                   </div>
                 )}
                 
@@ -370,6 +397,26 @@ export default function CurrencyConverter() {
                     <div className="h-4 bg-white/20 rounded w-2/3"></div>
                   </div>
                 )}
+              </div>
+            </GlassCard>
+            {/* Related tools for internal linking */}
+            <GlassCard className="p-4 sm:p-6 mt-6">
+              <div className="space-y-3">
+                <h2 className="text-lg font-semibold text-gray-900 dark:text-white">Related Tools</h2>
+                <ul className="space-y-2 text-sm">
+                  <li>
+                    <Link href="/unit-converter" className="text-blue-600 dark:text-blue-400 hover:underline">Unit Converter</Link>
+                    <span className="text-gray-600 dark:text-gray-400"> — Convert length, weight, temperature, and more.</span>
+                  </li>
+                  <li>
+                    <Link href="/sip-calculator" className="text-blue-600 dark:text-blue-400 hover:underline">SIP Calculator</Link>
+                    <span className="text-gray-600 dark:text-gray-400"> — Plan systematic investment returns.</span>
+                  </li>
+                  <li>
+                    <Link href="/emi-calculator" className="text-blue-600 dark:text-blue-400 hover:underline">EMI Calculator</Link>
+                    <span className="text-gray-600 dark:text-gray-400"> — Estimate monthly loan repayments.</span>
+                  </li>
+                </ul>
               </div>
             </GlassCard>
           </div>

@@ -71,7 +71,7 @@ export const NAV_CATEGORIES: NavCategory[] = [
       { label: 'BMI Calculator', href: '/bmi-calculator', icon: 'Heart' },
       // { label: 'Calorie Calculator', href: '/calorie-calculator', icon: 'Heart' },
       // { label: 'Body Fat Calculator', href: '/body-fat-calculator', icon: 'Heart' },
-      { label: 'BMR Calculator', href: '/bmr-calculator', icon: 'Activity' },
+      // { label: 'BMR Calculator', href: '/bmr-calculator', icon: 'Activity' },
       // { label: 'Ideal Weight Calculator', href: '/ideal-weight-calculator', icon: 'Heart' },
       // { label: 'Pace Calculator', href: '/pace-calculator', icon: 'Activity' },
       // { label: 'Pregnancy Calculator', href: '/pregnancy-calculator', icon: 'Calendar' },

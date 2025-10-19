@@ -53,8 +53,16 @@ export default function SWPCalculator() {
 
   return (
     <div className="pb-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <PageHeader title="SWP Calculator" description="Plan Systematic Withdrawal (SWP) monthly payouts and visualize remaining corpus." />
-      
+      {/* <PageHeader title="SWP Calculator" description="Plan Systematic Withdrawal (SWP) monthly payouts and visualize remaining corpus." /> */}
+            <div className="mb-12 text-center">
+        <h1 className="font-extrabold tracking-tight text-4xl sm:text-5xl bg-clip-text text-transparent bg-gradient-to-b from-gray-900 to-gray-600 dark:from-white dark:to-gray-300 mb-4">
+          SWP Calculator
+        </h1>
+        <p className="max-w-2xl mx-auto text-base sm:text-lg text-gray-600 dark:text-gray-300 leading-relaxed">
+          Plan Systematic Withdrawal (SWP) monthly payouts and visualize remaining corpus.
+        </p>
+      </div>
+
       <div className="mt-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Inputs */}
         <GlassCard className="p-6 sm:p-8 border-2 border-white/50 dark:border-white/20 bg-gradient-to-br from-white/90 to-white/70 dark:from-white/10 dark:to-white/5 backdrop-blur-xl shadow-xl">
